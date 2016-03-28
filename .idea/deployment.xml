@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="AnimalAdoption">
+    <serverData>
+      <paths name="AnimalAdoption">
+        <serverdata>
+          <mappings>
+            <mapping deploy="D:\DeveloperTools\Xampp\htdocs\AnimalAdoption" local="$PROJECT_DIR$" web="/AnimalAdoption" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
