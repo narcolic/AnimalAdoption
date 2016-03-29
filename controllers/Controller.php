@@ -14,13 +14,13 @@ class Controller
     function __construct()
     {
         $this->loginService = new LoginService();
-        $this->viewService = new ViewService($this->model);
+        //$this->viewService = new ViewService($this->model);
     }
 
     function invoke()
     {
         session_start();
-        $this->viewService->render(null);
+        //$this->viewService->render();
     }
     
 }

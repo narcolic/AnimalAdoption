@@ -40,7 +40,7 @@ class ViewService
         $this->displayPage("footer");
     }
 
-    protected function displayPage($page)
+    function displayPage($page)
     {
         if ($this->isDefaultPage($page)) {
             $this->page = self::ViewsPath . $this->defaultViews[$page];
