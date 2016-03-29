@@ -66,6 +66,7 @@ if (isset($_POST['submitted'])) {
             echo "Error details:" . $ex->getMessage();
         }
     }
+    
 } ?>
 
 

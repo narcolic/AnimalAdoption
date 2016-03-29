@@ -28,7 +28,7 @@ echo "</table>";
 echo "<br/>";
 
 
-//table of all adopt requests
+//table of all adopt requests (approved/denied)
 echo "<table>";
 echo "<tr>";
 echo "<th>Animal_ID</th>";
