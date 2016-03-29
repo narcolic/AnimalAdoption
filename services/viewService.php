@@ -21,16 +21,22 @@ class ViewService
         $this->model = $model;
     }
 
-    function render($page)
+    function render()
     {
         $this->displayPage("header");
-//        if (!isset($_GET["page"])) {
-//            $this->page = "balance.php";
-//        } else {
-//            $this->page = "view/" . $_GET["page"] . ".php";
-//        }
-//
-//        require_once($this->page);
+        if (!isset($_GET["page"])) {
+            $this->page = "index.php";
+        } else {
+            if (!$_SESSION['credential']) {
+                $this->page = "views/user/" . $_GET["page"] . ".php";
+            }
+            else{
+                $this->page = "views/staff/" . $_GET["page"] . ".php";
+            }
+        }
+
+        require_once($this->page);
+
         $this->displayPage("footer");
     }
 
