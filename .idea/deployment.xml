@@ -5,14 +5,14 @@
       <paths name="AnimalAdoption">
         <serverdata>
           <mappings>
-            <mapping deploy="D:\DeveloperTools\Xampp\htdocs\AnimalAdoption" local="$PROJECT_DIR$" web="/AnimalAdoption" />
+            <mapping deploy="Samples\AA\AnimalAdoption" local="$PROJECT_DIR$" web="/Samples/AA/AnimalAdoption" />
           </mappings>
         </serverdata>
       </paths>
       <paths name="Xampp Apache">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/Samples/AA/AnimalAdoption" />
+            <mapping local="$PROJECT_DIR$" web="" />
           </mappings>
         </serverdata>
       </paths>
