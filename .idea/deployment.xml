@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="AnimalAdoption">
+  <component name="PublishConfigData" serverName="AnimalAdoption" createEmptyFolders="true">
     <serverData>
       <paths name="AnimalAdoption">
         <serverdata>
           <mappings>
-            <mapping deploy="D:\DeveloperTools\Xampp\htdocs\AnimalAdoption" local="$PROJECT_DIR$" web="/AnimalAdoption" />
+            <mapping deploy="/AnimalAdoption" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
