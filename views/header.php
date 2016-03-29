@@ -4,7 +4,7 @@
         <div class="navbar-header">
             <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
                 <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
+                <span class="icon-bar">jklsfdlkjfsdj</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
@@ -19,13 +19,14 @@
                     <input name="password" type="password" class="form-control" placeholder="Password">
                 </div>
                 <button class="btn btn-success" type="submit">Sign in</button>
+                <a class="btn btn-info">Register</a>
             </form>
         </div><!--/.navbar-collapse -->
     </div>
 </nav>
 <div class="jumbotron">
     <div class="container">
-        <h2 class="intro title">Discover your next pet!</h2>
-        <p>Find </p>
+        <h2 class="intro title">Discover your pet!</h2>
+        <p></p>
     </div>
 </div>
