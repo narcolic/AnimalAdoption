@@ -10,12 +10,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="index.php" class="navbar-brand">A Pet's World</a>
+            <a href="index.php<?php if (isset($this->headerModel['user'])) { echo '?action=home'; }?>" class="navbar-brand">A Pet's World</a>
         </div>
-        <?php if (!isset($_SESSION['user'])): ?>
+        <?php if (!isset($this->headerModel['user'])): ?>
             <div class="navbar-collapse collapse" id="navbar">
-                <form class="navbar-form navbar-right" action="index.php" method="post">
-                    <input type="hidden" name="action" value="0">
+                <form class="navbar-form navbar-right" action="index.php?action=login" method="post">
                     <div class="form-group">
                         <input name="username" type="text" class="form-control" placeholder="Username">
                     </div>
@@ -23,16 +22,15 @@
                         <input name="password" type="password" class="form-control" placeholder="Password">
                     </div>
                     <button class="btn btn-success" type="submit">Sign in</button>
-                    <a class="btn btn-info">Register</a>
+                    <a class="btn btn-info" href="index.php?action=register">Register</a>
                 </form>
             </div><!--/.navbar-collapse -->
         <?php else: ?>
             <div class="navbar-collapse collapse" id="navbar">
-                <form class="navbar-form navbar-right" action="index.php" method="post">
+                <form class="navbar-form navbar-right" action="index.php?action=logout" method="post">
                     <div class="form-group">
-                        <h4>Hello, <?php echo $_SESSION['user']->username ?>&nbsp;</h4>
+                        <h4>Hello, <?php echo  $this->headerModel['user']->username ?>&nbsp;</h4>
                     </div>
-                    <input type="hidden" name="action" value="1">
                     <button class="btn btn-success" type="submit">Logout</button>
                 </form>
             </div>

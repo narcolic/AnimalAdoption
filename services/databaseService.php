@@ -73,6 +73,28 @@ class DatabaseService
         return $animals;
     }
 
+    public function saveAnimal($animal)
+    {
+        $query = "INSERT INTO animal(name,
+            dateofbirth,
+            description,
+            photo,
+            available) VALUES (
+            :name, 
+            :dateofbirth, 
+            :description, 
+            :photo,
+            1)";
+
+        $stmt = $this->pdo->prepare($query);
+
+        $stmt->bindParam(':name', $animal->name, PDO::PARAM_STR);
+        $stmt->bindParam(':dateofbirth', $animal->birthdate, PDO::PARAM_STR);
+        $stmt->bindParam(':description', $animal->description, PDO::PARAM_STR);
+        $stmt->bindParam(':photo', $animal->picture, PDO::PARAM_LOB);
+        return $stmt->execute();
+    }
+
     public function getPendingAdoptReq()
     {
         $query = "SELECT * FROM (animal INNER JOIN adoptionrequest ON animal.animalID = adoptionrequest.animalID) INNER JOIN user ON user.userID = adoptionrequest.userID WHERE approved IS NULL ";
@@ -109,9 +131,17 @@ class DatabaseService
             $rows = $this->pdo->query($query);
             if ($rows && $rows->rowCount() == 1) {
                 $row = $rows->fetch();
-                $animalarray = array($row['animalID'], $row['name'], $row['dateofbirth'], $row['description'], $row['photo']);
+                $animalarray = array(
+                    $row['animalID'],
+                    $row['name'],
+                    $row['dateofbirth'],
+                    $row['description'],
+                    $row['photo']
+                );
                 return $animalarray;
-            } else return null;
+            } else {
+                return null;
+            }
         } catch (PDOException $ex) {
             array_push($this->errors, $ex->getMessage());
         }

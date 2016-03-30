@@ -22,6 +22,7 @@ class ViewService
     );
 
     public $page = null;
+    public $headerModel = null;
     public $view = null;
 
 
@@ -32,6 +33,15 @@ class ViewService
     function render($page)
     {
         $this->page = $page;
+        if(isset($_SESSION['user']))
+        {
+            $this->headerModel =array();
+            $this->headerModel['user'] = $_SESSION['user'];
+
+        }
+        else{
+            $this->headerModel = null;
+        }
         $this->displayPage(new Page("header",null));
         if (!isset($page->view)) {
             $this->displayPage(new Page("intro",null));

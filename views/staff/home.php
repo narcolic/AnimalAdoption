@@ -23,6 +23,20 @@
         </table>
 
         <br>
+        <form class="form" action="index.php?action=home" method="post">
+            <div class="form-group">
+                Name:
+                <input name="animal_name" type="text" class="form-control" placeholder="name">
+                Date:
+                <input name="animal_date" type="date" class="form-control" placeholder="date">
+                Description:
+                <input name="animal_description" type="text" class="form-control" placeholder="description">
+                Photo:
+                <input name="animal_photo" type="text" class="form-control" placeholder="photo">
+                <input name="add_animal" type="hidden" value="1">
+            </div>
+            <button class="btn btn-success" type="submit">Add Animal</button>
+        </form>
         <table class="table">
             <caption>
                 <h2 class="table title">Animals & Owners</h2>

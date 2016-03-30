@@ -1,9 +1,9 @@
 <?php
 
-include_once  'models/user.php';
-include_once  'models/animal.php';
-include_once ('models/adoptionRequests.php');
-include_once ('models/ownRequest.php');
+include_once 'models/user.php';
+include_once 'models/animal.php';
+include_once('models/adoptionRequests.php');
+include_once('models/ownRequest.php');
 include_once 'views/page.php';
 include_once 'services/viewService.php';
 include_once 'services/loginService.php';
@@ -14,9 +14,13 @@ class Controller
     const PARAMETER_USERNAME = 'username';
     const PARAMETER_PASSWORD = 'password';
 
-    const ACTION_LOGIN = 0;
-    const ACTION_LOGOUT = 1;
-    const ACTION_REGISTER = 2;
+    const ACTION_LOGIN = 'login';
+    const ACTION_LOGOUT = 'logout';
+    const ACTION_REGISTER = 'register';
+    const ACTION_HOME = 'home';
+
+
+    const SUBACTION_ADD_ANIMAL = 'add_animal';
 
     protected $loginService = null;
     protected $databaseService = null;
@@ -38,11 +42,11 @@ class Controller
     function invoke()
     {
 
-        if (!isset($_POST[self::PARAMETER_ACTION])) {
+        if (!isset($_GET[self::PARAMETER_ACTION])) {
             $this->viewService->render($this->defaultView);
             return;
         }
-        switch ($_POST[self::PARAMETER_ACTION]) {
+        switch ($_GET[self::PARAMETER_ACTION]) {
             case self::ACTION_LOGIN:
                 $this->login();
                 break;
@@ -50,7 +54,24 @@ class Controller
                 $this->loginService->logout();
                 break;
             case self::ACTION_REGISTER;
-                
+                $this->loginService->register();
+                break;
+            case self::ACTION_HOME:
+                if (!isset($_SESSION['user'])) {
+                    $this->viewService->render($this->defaultView);
+                } else {
+                    if(isset($_POST[self::SUBACTION_ADD_ANIMAL]))
+                    {
+                        $animal = new Animal();
+                        $animal->name = isset($_POST['animal_name']) ? $_POST['animal_name'] : null;
+                        $animal->birthdate = isset($_POST['animal_date']) ? $_POST['animal_date'] : null;
+                        $animal->description  = isset($_POST['animal_description']) ? $_POST['animal_description'] : null;
+                        $animal->picture = isset($_POST['animal_photo']) ? $_POST['animal_photo'] : null;
+                        $operation = $this->databaseService->saveAnimal($animal);
+                        header("Location: index.php?action=" . self::ACTION_HOME);
+                    }
+                    $this->home();
+                }
                 break;
             default:
                 $this->viewService->render($this->defaultView);
@@ -67,26 +88,7 @@ class Controller
             $username = $_POST[self::PARAMETER_USERNAME];
             $password = $_POST[self::PARAMETER_PASSWORD];
             if ($this->loginService->login($username, $password)) {
-                $user = $_SESSION['user'];
-                $model = null;
-                $indexkey = $user->getRole().'home';
-                if($user->isStaff)
-                {
-                    $model = array();
-                    $model['Animals'] = $this->databaseService->getAnimalsForAdoption();
-                    $model['AdoptionRequests'] = $this->databaseService->getPendingAdoptReq();
-                    $model['AnimalOwners'] = $this->databaseService->getAllAnimalsOwners();
-                    
-                }
-                else
-                {
-                    $model = array();
-                    $model['Animals'] = $this->databaseService->getUserAnimals($_SESSION['user']->id);
-                    $model['PreviousAdoptionRequests'] = $this->databaseService->getUserAnimalRequests($_SESSION['user']->id);
-                    $model['AdoptionRequests'] = $this->databaseService->getUserPendReq($_SESSION['user']->id);
-                    $model['AllAnimals'] = $this->databaseService->getAnimalsForAdoption();
-                }
-                $this->viewService->render(new Page($indexkey, $model));
+                header("Location: index.php?action=" . self::ACTION_HOME);
             } else {
                 $this->viewService->render($this->defaultView);
             }
@@ -94,6 +96,28 @@ class Controller
         }
 
     }
+
+    private function home()
+    {
+        $user = $_SESSION['user'];
+        $model = null;
+        $indexkey = $user->getRole() . 'home';
+        if ($user->isStaff) {
+            $model = array();
+            $model['Animals'] = $this->databaseService->getAnimalsForAdoption();
+            $model['AdoptionRequests'] = $this->databaseService->getPendingAdoptReq();
+            $model['AnimalOwners'] = $this->databaseService->getAllAnimalsOwners();
+
+        } else {
+            $model = array();
+            $model['Animals'] = $this->databaseService->getUserAnimals($_SESSION['user']->id);
+            $model['PreviousAdoptionRequests'] = $this->databaseService->getUserAnimalRequests($_SESSION['user']->id);
+            $model['AdoptionRequests'] = $this->databaseService->getUserPendReq($_SESSION['user']->id);
+            $model['AllAnimals'] = $this->databaseService->getAnimalsForAdoption();
+        }
+        $this->viewService->render(new Page($indexkey, $model));
+    }
+
 
 
 }
