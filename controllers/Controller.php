@@ -2,6 +2,7 @@
 
 include_once  'models/user.php';
 include_once  'models/animal.php';
+include_once ('models/adoptionRequests.php');
 include_once 'views/page.php';
 include_once 'services/viewService.php';
 include_once 'services/loginService.php';
@@ -68,11 +69,14 @@ class Controller
                 {
                     $model = array();
                     $model['Animals'] = $this->databaseService->getAnimalsForAdoption();
-                    $model['AdoptionRequests'] = '';
+                    $model['AdoptionRequests'] = $this->databaseService->getPendingAdoptReq();
                 }
                 else
                 {
-                    $model = null;
+                    $model = array();
+                    $model['Animals'] = $this->databaseService->getUserAnimals($_SESSION['user']->id);
+                    $model['AdoptionRequests'] = $this->databaseService->getUserPendReq($_SESSION['user']->id);
+                    $model['Animals2'] = $this->databaseService->getAnimalsForAdoption();
                 }
                 $this->viewService->render(new Page($indexkey, $model));
             } else {

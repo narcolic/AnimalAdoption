@@ -25,39 +25,38 @@ class DatabaseService
             $this->pdo = new PDO("mysql:host=$this->server;dbname=$this->dbname", "$this->username", "$this->password");
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $ex) {
-            array_push($ex->getMessage(), $this->errors);
+            array_push($this->errors, $ex->getMessage());
         }
     }
 
     public function getUserByUsername($username)
     {
-        $query = "select * from user where username = '" . $username . "'" ;
+        $query = "SELECT * FROM user WHERE username = '" . $username . "'";
         $user = new User();
         try {
-            $rows = $this->pdo-> query($query);
-            if ($rows && $rows->rowCount() ==1) {
-                $row=$rows->fetch();
+            $rows = $this->pdo->query($query);
+            if ($rows && $rows->rowCount() == 1) {
+                $row = $rows->fetch();
                 $user->username = $row['username'];
                 $user->id = $row['userID'];
                 $user->password = $row['password'];
                 $user->isStaff = $row['staff'];
             }
         } catch (PDOException $ex) {
-            array_push($ex->getMessage(), $this->errors);
+            array_push($this->errors, $ex->getMessage());
         }
         return $user;
     }
 
     public function getAnimalsForAdoption()
     {
-        $query = "select * from animal where available = 1";
+        $query = "SELECT * FROM animal WHERE available = 1";
         $animals = array();
         try {
-            $rows = $this->pdo-> query($query);
+            $rows = $this->pdo->query($query);
             if ($rows && $rows->rowCount() >= 1) {
                 $animalsArray = $rows->fetchAll();
-                foreach ($animalsArray as $a)
-                {
+                foreach ($animalsArray as $a) {
                     $animal = new Animal();
                     $animal->id = $a['animalID'];
                     $animal->name = $a['name'];
@@ -69,68 +68,106 @@ class DatabaseService
                 }
             }
         } catch (PDOException $ex) {
-            array_push($ex->getMessage(), $this->errors);
+            array_push($this->errors, $ex->getMessage());
         }
         return $animals;
     }
 
-    public function getPendingAdoptReq() {
-        $query = "select animalID,name,dateofbirth,description,photo from animal where available = TRUE ";
+    public function getPendingAdoptReq()
+    {
+        $query = "SELECT * FROM (animal INNER JOIN adoptionrequest ON animal.animalID = adoptionrequest.animalID) INNER JOIN user ON user.userID = adoptionrequest.userID WHERE approved IS NULL ";
+        $animals = array();
         try {
-            $rows = $this->pdo-> query($query);
-            if ($rows && $rows->rowCount() ==1) {
-                $row=$rows->fetch();
-                $animalarray = array($row['animalID'],$row['name'],$row['dateofbirth'],$row['description'],$row['photo']);
-                return $animalarray;
+            $rows = $this->pdo->query($query);
+            if ($rows && $rows->rowCount() >= 1) {
+                $animalsArray = $rows->fetchAll();
+                foreach ($animalsArray as $a) {
+                    $adoptReq = new AdoptionRequests();
+                    $adoptReq->adid = $a['adoptionID'];
+                    $adoptReq->uid = $a['userID'];
+                    $adoptReq->uname = $a['username'];
+                    $adoptReq->aid = $a['animalID'];
+                    $adoptReq->aname = $a['name'];
+                    $adoptReq->isApproved = $a['approved'];
+                    $adoptReq->birthdate = $a['dateofbirth'];
+                    $adoptReq->description = $a['description'];
+                    $adoptReq->picture = $a['photo'];
+                    $adoptReq->isAvailble = $a['available'];
+                    array_push($animals, $adoptReq);
+                }
             }
-            else return null;
         } catch (PDOException $ex) {
-            array_push($ex->getMessage(), $this->errors);
+            array_push($this->errors, $ex->getMessage());
+        }
+        return $animals;
+    }
+
+    public function allAdoptReq()
+    {
+        $query = "SELECT animalID,name,dateofbirth,description,photo FROM animal WHERE animalID = (SELECT animalID FROM adoptionrequest WHERE approved IS NOT NULL ) ";
+        try {
+            $rows = $this->pdo->query($query);
+            if ($rows && $rows->rowCount() == 1) {
+                $row = $rows->fetch();
+                $animalarray = array($row['animalID'], $row['name'], $row['dateofbirth'], $row['description'], $row['photo']);
+                return $animalarray;
+            } else return null;
+        } catch (PDOException $ex) {
+            array_push($this->errors, $ex->getMessage());
         }
     }
 
-    public function allAdoptReq() {
-        $query = "select animalID,name,dateofbirth,description,photo from animal where animalID = (SELECT animalID from adoptionrequest WHERE approved IS NOT NULL ) ";
+    public function getUserPendReq($id)
+    {
+        $query = "SELECT * FROM (animal INNER JOIN adoptionrequest ON animal.animalID = adoptionrequest.animalID) INNER JOIN user ON user.userID = adoptionrequest.userID WHERE approved IS NULL AND adoptionrequest.userID='" . $id . "'";
+        $animals = array();
         try {
-            $rows = $this->pdo-> query($query);
-            if ($rows && $rows->rowCount() ==1) {
-                $row=$rows->fetch();
-                $animalarray = array($row['animalID'],$row['name'],$row['dateofbirth'],$row['description'],$row['photo']);
-                return $animalarray;
+            $rows = $this->pdo->query($query);
+            if ($rows && $rows->rowCount() >= 1) {
+                $animalsArray = $rows->fetchAll();
+                foreach ($animalsArray as $a) {
+                    $adoptReq = new AdoptionRequests();
+                    $adoptReq->adid = $a['adoptionID'];
+                    $adoptReq->uid = $a['userID'];
+                    $adoptReq->uname = $a['username'];
+                    $adoptReq->aid = $a['animalID'];
+                    $adoptReq->aname = $a['name'];
+                    $adoptReq->isApproved = $a['approved'];
+                    $adoptReq->birthdate = $a['dateofbirth'];
+                    $adoptReq->description = $a['description'];
+                    $adoptReq->picture = $a['photo'];
+                    $adoptReq->isAvailble = $a['available'];
+                    array_push($animals, $adoptReq);
+                }
             }
-            else return null;
         } catch (PDOException $ex) {
-            array_push($ex->getMessage(), $this->errors);
+            array_push($this->errors, $ex->getMessage());
         }
+        return $animals;
     }
 
-    public function userPendingAdoptReq($id) {
-        $query = "select animalID,name,dateofbirth,description,photo from animal where animalID = (SELECT animalID from adoptionrequest WHERE userID = '$id' AND approved IS NULL ) ";
+    public function getUserAnimals($userid)
+    {
+        $query = "SELECT * FROM (animal INNER JOIN owns ON animal.animalID = owns.animalID) WHERE owns.userID = '" . $userid . "'";
+        $animals = array();
         try {
-            $rows = $this->pdo-> query($query);
-            if ($rows && $rows->rowCount() ==1) {
-                $row=$rows->fetch();
-                $animalarray = array($row['animalID'],$row['name'],$row['dateofbirth'],$row['description'],$row['photo']);
-                return $animalarray;
+            $rows = $this->pdo->query($query);
+            if ($rows && $rows->rowCount() >= 1) {
+                $animalsArray = $rows->fetchAll();
+                foreach ($animalsArray as $a) {
+                    $animal = new Animal();
+                    $animal->id = $a['animalID'];
+                    $animal->name = $a['name'];
+                    $animal->birthdate = $a['dateofbirth'];
+                    $animal->description = $a['description'];
+                    $animal->picture = $a['photo'];
+                    $animal->isAvailable = $a['available'];
+                    array_push($animals, $animal);
+                }
             }
-            else return null;
         } catch (PDOException $ex) {
-            array_push($ex->getMessage(), $this->errors);
+            array_push($this->errors, $ex->getMessage());
         }
-    }
-
-    public function userOwnedAnimals($id) {
-        $query = "select animalID,name,dateofbirth,description,photo from animal where animalID =(SELECT animalID FROM owns where userID = '$id') ";
-        try {
-            $rows = $this->pdo-> query($query);
-            if ($rows && $rows->rowCount() ==1) {
-                $row=$rows->fetch();
-                $animalarray = array($row['animalID'],$row['name'],$row['dateofbirth'],$row['description'],$row['photo']);
-                return $animalarray;
-            }
-            else return null;
-        } catch (PDOException $ex) {
-            array_push($ex->getMessage(), $this->errors);
-        }
+        return $animals;
     }
 }
