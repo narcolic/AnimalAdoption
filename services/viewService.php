@@ -1,5 +1,6 @@
 <?php
 
+include_once '/views/page.php';
 
 class ViewService
 {
@@ -8,51 +9,84 @@ class ViewService
     protected $defaultViews = array(
         'header' => 'header.php',
         'menu' => 'menu.php',
-        'footer' => 'footer.php'
+        'footer' => 'footer.php',
+        'intro' => 'home.php',
     );
 
+    protected $staffViews = array(
+        'staffhome' => 'home.php',
+    );
+
+    protected $userViews = array(
+        'userhome' => 'home.php',
+    );
 
     public $page = null;
-    public $model = null;
+    public $view = null;
 
 
-    function __construct($model)
+    function __construct()
     {
-        $this->model = $model;
     }
 
-    function render()
+    function render($page)
     {
-        $this->displayPage("header");
-        if (!isset($_GET["page"])) {
-            $this->page = "index.php";
-        } else {
-            if (!$_SESSION['credential']) {
-                $this->page = "views/user/" . $_GET["page"] . ".php";
-            }
-            else{
-                $this->page = "views/staff/" . $_GET["page"] . ".php";
-            }
+        $this->page = $page;
+        $this->displayPage(new Page("header",null));
+        if (!isset($page->view)) {
+            $this->displayPage(new Page("intro",null));
         }
+        else
+        {
 
-        require_once($this->page);
+            $this->displayPage($page);
+        }
+//        if (!isset($_GET["page"])) {
+//            $this->page = "index.php";
+//        } else {
+//            if (!$_SESSION['credential']) {
+//                $this->page = "views/user/" . $_GET["page"] . ".php";
+//            }
+//            else{
+//                $this->page = "views/staff/" . $_GET["page"] . ".php";
+//            }
+//        }
 
-        $this->displayPage("footer");
+
+        $this->displayPage(new Page("footer",null));
     }
 
-    function displayPage($page)
+    private function displayPage($page)
     {
-        if ($this->isDefaultPage($page)) {
-            $this->page = self::ViewsPath . $this->defaultViews[$page];
-        } else {
-            $this->page = self::ViewsPath . $page . ".php";
+        if ($this->isDefaultPage($page->view)) {
+            $this->view = self::ViewsPath . $this->defaultViews[$page->view];
+        } elseif ($this->isStaffPage($page->view)) {
+
+            $this->view = self::ViewsPath . 'staff/' . $this->staffViews[$page->view];
+        } elseif($this->isUserPage($page->view))
+        {
+            $this->view = self::ViewsPath . 'user/' . $this->userViews[$page->view];
         }
-        require($this->page);
+        require($this->view);
     }
 
     private function isDefaultPage($pageShortcut)
     {
         return array_key_exists($pageShortcut, $this->defaultViews);
     }
+
+
+    private function isStaffPage($pageShortcut)
+    {
+        return array_key_exists($pageShortcut, $this->staffViews);
+    }
+
+
+    private function isUserPage($pageShortcut)
+    {
+        return array_key_exists($pageShortcut, $this->userViews);
+    }
+
+
 
 }
