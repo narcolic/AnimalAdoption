@@ -1,7 +1,7 @@
 <?php
-include_once '/services/DatabaseService.php';
-include_once '/services/viewService.php';
-include_once  '/models/user.php';
+include_once 'services/DatabaseService.php';
+include_once 'services/viewService.php';
+include_once  'models/user.php';
 
 class LoginService
 {

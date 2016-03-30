@@ -1,10 +1,10 @@
 <?php
 
-include_once  '/models/user.php';
-include_once  '/models/animal.php';
-include_once '/views/page.php';
-include_once '/services/viewService.php';
-include_once '/services/loginService.php';
+include_once  'models/user.php';
+include_once  'models/animal.php';
+include_once 'views/page.php';
+include_once 'services/viewService.php';
+include_once 'services/loginService.php';
 
 class Controller
 {
@@ -34,7 +34,6 @@ class Controller
 
     function invoke()
     {
-        session_start();
 
         if (!isset($_POST[self::PARAMETER_ACTION])) {
             $this->viewService->render($this->defaultView);

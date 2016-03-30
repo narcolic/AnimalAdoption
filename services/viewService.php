@@ -1,6 +1,6 @@
 <?php
 
-include_once '/views/page.php';
+include_once 'views/page.php';
 
 class ViewService
 {
