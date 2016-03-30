@@ -1,13 +1,14 @@
 <?php
 
-Class Animal
+Class OwnRequest
 {
-    public $id = -1;
-    public $name = '';
+    public $uid = -1;
+    public $uname = '';
+    public $aid = -1;
+    public $aname = '';
     public $birthdate = '';
     public $description = '';
     public $picture = '';
-    public $isAvailable = false;
 
     function __construct()
     {

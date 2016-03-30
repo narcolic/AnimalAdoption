@@ -3,6 +3,7 @@
 include_once  'models/user.php';
 include_once  'models/animal.php';
 include_once ('models/adoptionRequests.php');
+include_once ('models/ownRequest.php');
 include_once 'views/page.php';
 include_once 'services/viewService.php';
 include_once 'services/loginService.php';
@@ -15,6 +16,7 @@ class Controller
 
     const ACTION_LOGIN = 0;
     const ACTION_LOGOUT = 1;
+    const ACTION_REGISTER = 2;
 
     protected $loginService = null;
     protected $databaseService = null;
@@ -47,6 +49,9 @@ class Controller
             case self::ACTION_LOGOUT:
                 $this->loginService->logout();
                 break;
+            case self::ACTION_REGISTER;
+                
+                break;
             default:
                 $this->viewService->render($this->defaultView);
         }
@@ -70,13 +75,16 @@ class Controller
                     $model = array();
                     $model['Animals'] = $this->databaseService->getAnimalsForAdoption();
                     $model['AdoptionRequests'] = $this->databaseService->getPendingAdoptReq();
+                    $model['AnimalOwners'] = $this->databaseService->getAllAnimalsOwners();
+                    
                 }
                 else
                 {
                     $model = array();
                     $model['Animals'] = $this->databaseService->getUserAnimals($_SESSION['user']->id);
+                    $model['PreviousAdoptionRequests'] = $this->databaseService->getUserAnimalRequests($_SESSION['user']->id);
                     $model['AdoptionRequests'] = $this->databaseService->getUserPendReq($_SESSION['user']->id);
-                    $model['Animals2'] = $this->databaseService->getAnimalsForAdoption();
+                    $model['AllAnimals'] = $this->databaseService->getAnimalsForAdoption();
                 }
                 $this->viewService->render(new Page($indexkey, $model));
             } else {

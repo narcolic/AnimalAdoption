@@ -170,4 +170,59 @@ class DatabaseService
         }
         return $animals;
     }
+
+    public function getUserAnimalRequests($id)
+    {
+        $query = "SELECT * FROM (animal INNER JOIN adoptionrequest ON animal.animalID = adoptionrequest.animalID) INNER JOIN user ON user.userID = adoptionrequest.userID WHERE approved IS NOT NULL AND adoptionrequest.userID='" . $id . "'";
+        $animals = array();
+        try {
+            $rows = $this->pdo->query($query);
+            if ($rows && $rows->rowCount() >= 1) {
+                $animalsArray = $rows->fetchAll();
+                foreach ($animalsArray as $a) {
+                    $adoptReq = new AdoptionRequests();
+                    $adoptReq->adid = $a['adoptionID'];
+                    $adoptReq->uid = $a['userID'];
+                    $adoptReq->uname = $a['username'];
+                    $adoptReq->aid = $a['animalID'];
+                    $adoptReq->aname = $a['name'];
+                    $adoptReq->isApproved = $a['approved'];
+                    $adoptReq->birthdate = $a['dateofbirth'];
+                    $adoptReq->description = $a['description'];
+                    $adoptReq->picture = $a['photo'];
+                    $adoptReq->isAvailble = $a['available'];
+                    array_push($animals, $adoptReq);
+                }
+            }
+        } catch (PDOException $ex) {
+            array_push($this->errors, $ex->getMessage());
+        }
+        return $animals;
+    }
+
+    public function getAllAnimalsOwners()
+    {
+        $query = "SELECT * FROM (animal INNER JOIN owns ON animal.animalID = owns.animalID) INNER JOIN user ON user.userID = owns.userID ";
+        $animals = array();
+        try {
+            $rows = $this->pdo->query($query);
+            if ($rows && $rows->rowCount() >= 1) {
+                $animalsArray = $rows->fetchAll();
+                foreach ($animalsArray as $a) {
+                    $ownReq = new ownRequest();
+                    $ownReq->uid = $a['userID'];
+                    $ownReq->uname = $a['username'];
+                    $ownReq->aid = $a['animalID'];
+                    $ownReq->aname = $a['name'];
+                    $ownReq->birthdate = $a['dateofbirth'];
+                    $ownReq->description = $a['description'];
+                    $ownReq->picture = $a['photo'];
+                    array_push($animals, $ownReq);
+                }
+            }
+        } catch (PDOException $ex) {
+            array_push($this->errors, $ex->getMessage());
+        }
+        return $animals;
+    }
 }

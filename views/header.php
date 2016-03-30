@@ -30,7 +30,7 @@
             <div class="navbar-collapse collapse" id="navbar">
                 <form class="navbar-form navbar-right" action="index.php" method="post">
                     <div class="form-group">
-                    <h4>Hello, <?php echo $_SESSION['user']->username ?>&nbsp;</h4>
+                        <h4>Hello, <?php echo $_SESSION['user']->username ?>&nbsp;</h4>
                     </div>
                     <input type="hidden" name="action" value="1">
                     <button class="btn btn-success" type="submit">Logout</button>
@@ -38,4 +38,19 @@
             </div>
         <?php endif; ?>
     </div>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">HakunaLePeta</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Page 1</a></li>
+                <li><a href="#">Page 2</a></li>
+                <li><a href="#">Page 3</a></li>
+            </ul>
+        </div>
+    </nav>
+
 </nav>

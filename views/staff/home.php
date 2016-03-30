@@ -21,7 +21,31 @@
             </tr>
             <?php endforeach; ?>
         </table>
+
         <br>
+        <table class="table">
+            <caption>
+                <h2 class="table title">Animals & Owners</h2>
+            </caption>
+            <tr>
+                <th>Username</th>
+                <th>Animal Name</th>
+                <th>Animal Birth Date</th>
+                <th>Description</th>
+                <th>Photo</th>
+            </tr>
+            <?php foreach ($this->page->model['AnimalOwners'] as $ownsRequest):?>
+                <tr>
+                    <td><?php echo $ownsRequest->uname; ?></td>
+                    <td><?php echo $ownsRequest->aname; ?></td>
+                    <td><?php echo $ownsRequest->birthdate; ?></td>
+                    <td><?php echo $ownsRequest->description; ?></td>
+                    <td><?php echo $ownsRequest->picture; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+        <br>
+
         <table class="table">
             <caption>
                 <h2 class="table title">Pending Adoption Requests</h2>
