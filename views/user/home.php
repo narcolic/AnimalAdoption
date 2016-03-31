@@ -18,7 +18,7 @@
                     <td><?php echo $animal->name; ?></td>
                     <td><?php echo $animal->birthdate; ?></td>
                     <td><?php echo $animal->description; ?></td>
-                    <td><?php echo $animal->picture; ?></td>
+                    <td><img src="<?php echo $animal->picture; ?>" class="img-rounded" width="130" height="90"/></td>
                 </tr>
             <?php endforeach; ?>
         </table>
@@ -43,7 +43,7 @@
                     <td><?php echo $adoptionRequest->aname; ?></td>
                     <td><?php echo $adoptionRequest->birthdate; ?></td>
                     <td><?php echo $adoptionRequest->description; ?></td>
-                    <td><?php echo $adoptionRequest->picture; ?></td>
+                    <td><img src="<?php echo $adoptionRequest->picture; ?>" class="img-rounded" width="130" height="90"/></td>
                 </tr>
             <?php endforeach; ?>
         </table>
@@ -68,7 +68,7 @@
                     <td><?php echo $adoptionRequest->aname; ?></td>
                     <td><?php echo $adoptionRequest->birthdate; ?></td>
                     <td><?php echo $adoptionRequest->description; ?></td>
-                    <td><?php echo $adoptionRequest->picture; ?></td>
+                    <td><img src="<?php echo $adoptionRequest->picture; ?>" class="img-rounded" width="130" height="90"/></td>
                 </tr>
             <?php endforeach; ?>
         </table>
@@ -84,6 +84,7 @@
                 <th>Date</th>
                 <th>Description</th>
                 <th>Photo</th>
+                <th></th>
             </tr>
             <?php foreach ($this->page->model['AllAnimals'] as $animal): ?>
                 <tr>
@@ -91,7 +92,13 @@
                     <td><?php echo $animal->name; ?></td>
                     <td><?php echo $animal->birthdate; ?></td>
                     <td><?php echo $animal->description; ?></td>
-                    <td><?php echo $animal->picture; ?></td>
+                    <td><img src="<?php echo $animal->picture; ?>" class="img-rounded" width="130" height="90"/></td>
+                    <td>
+                        <form action="index.php?action=adoptreq" method="post">
+                            <input type="hidden" name="animal_id" value="<?php echo $animal->id; ?>">
+                            <button type="submit" class="btn btn-success">Request</button>
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </table>

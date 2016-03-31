@@ -38,7 +38,7 @@
                     <td><?php echo $animal->name; ?></td>
                     <td><?php echo $animal->birthdate; ?></td>
                     <td><?php echo $animal->description; ?></td>
-                    <td><img src="<?php echo $animal->picture; ?>" /></td>
+                    <td><img src="<?php echo $animal->picture; ?>" class="img-rounded" width="130" height="90"/></td>
                 </tr>
             <?php endforeach; ?>
         </table>
@@ -60,7 +60,7 @@
                     <td><?php echo $ownsRequest->aname; ?></td>
                     <td><?php echo $ownsRequest->birthdate; ?></td>
                     <td><?php echo $ownsRequest->description; ?></td>
-                    <td><?php echo $ownsRequest->picture; ?></td>
+                    <td><img src="<?php echo $ownsRequest->picture; ?>" class="img-rounded" width="130" height="90"/></td>
                 </tr>
             <?php endforeach; ?>
         </table>
@@ -85,7 +85,7 @@
                     <td><?php echo $adoptionRequest->aname; ?></td>
                     <td><?php echo $adoptionRequest->birthdate; ?></td>
                     <td><?php echo $adoptionRequest->description; ?></td>
-                    <td><?php echo $adoptionRequest->picture; ?></td>
+                    <td><img src="<?php echo $adoptionRequest->picture; ?>" class="img-rounded" width="130" height="90"/></td>
                 </tr>
             <?php endforeach; ?>
         </table>

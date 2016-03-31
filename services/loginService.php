@@ -36,10 +36,8 @@ class LoginService
     {
         if ($this->databaseService->isUserAvail($user->username)) {
             $this->databaseService->saveUser($user);
+            return true;
         }
-        else{
-            echo "Username already exists!";
-            
-        }
+        return false;
     }
 }

@@ -29,6 +29,19 @@ class DatabaseService
         }
     }
 
+    public function saveAdoptionRequest($userid,$animalid){
+        $query = "INSERT INTO adoptionrequest (userID,
+            animalID) VALUES (
+            :userID, 
+            :animalID)";
+
+        $stmt = $this->pdo->prepare($query);
+
+        $stmt->bindParam(':userID', $userid, PDO::PARAM_INT);
+        $stmt->bindParam(':animalID', $animalid, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
     public function getUserByUsername($username)
     {
         $query = "SELECT * FROM user WHERE username = '" . $username . "'";
@@ -93,6 +106,19 @@ class DatabaseService
         $stmt->bindParam(':description', $animal->description, PDO::PARAM_STR);
         $stmt->bindParam(':photo', $animal->picture, PDO::PARAM_STR);
         return $stmt->execute();
+    }
+
+    public function isRequestAvailable($userid,$animalid){
+        $query = "SELECT * FROM adoptionrequest WHERE userID = '" . $userid . "' AND animalID = '" . $animalid . "'";
+        try {
+            $row = $this->pdo->query($query);
+            if ($row->rowCount() !=0) {
+                return false;
+            }
+            return true;
+        } catch (PDOException $ex) {
+            array_push($this->errors, $ex->getMessage());
+        }
     }
 
     public function getPendingAdoptReq()
