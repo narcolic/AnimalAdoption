@@ -11,10 +11,14 @@
                 <input name="animal_date" type="date" class="form-control" placeholder="date">
                 Description:
                 <input name="animal_description" type="text" class="form-control" placeholder="description">
-                Photo:
-                <input name="animal_photo" type="text" class="form-control" placeholder="photo">
+                Submit Your image (only jpeg, png,gif are allowed):
+                <input type="file" name="pic"/>
+                <input type="hidden" name="uploaded" value="true"/><br>
+                <input class="btn btn-primary btn-xs" type="submit" name="upload" value="Upload"/>
+                <input class="btn btn-primary btn-xs" type="reset" value="clear"/>
                 <input name="add_animal" type="hidden" value="1">
             </div>
+            <br>
             <button class="btn btn-success" type="submit">Add Animal</button>
         </form>
         <table class="table">

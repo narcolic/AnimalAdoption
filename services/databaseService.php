@@ -91,7 +91,7 @@ class DatabaseService
         $stmt->bindParam(':name', $animal->name, PDO::PARAM_STR);
         $stmt->bindParam(':dateofbirth', $animal->birthdate, PDO::PARAM_STR);
         $stmt->bindParam(':description', $animal->description, PDO::PARAM_STR);
-        $stmt->bindParam(':photo', $animal->picture, PDO::PARAM_LOB);
+        $stmt->bindParam(':photo', $animal->picture, PDO::PARAM_STR);
         return $stmt->execute();
     }
 

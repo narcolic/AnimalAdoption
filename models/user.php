@@ -1,11 +1,6 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: StBoz
- * Date: 29/3/2016
- * Time: 11:09 μμ
- */
+
 Class User
 {
 

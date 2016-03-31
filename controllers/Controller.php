@@ -21,6 +21,7 @@ class Controller
 
 
     const SUBACTION_ADD_ANIMAL = 'add_animal';
+    const SUBACTION_UPLOAD_PHOTO = 'uploaded';
     const SUBACTION_REGISTER_USER = 'register_user';
 
     protected $loginService = null;
@@ -55,6 +56,7 @@ class Controller
                 $this->loginService->logout();
                 break;
             case self::ACTION_REGISTER;
+                var_dump($_POST[self::ACTION_REGISTER]);
                 if (isset($_POST[self::SUBACTION_REGISTER_USER])) {
                     $user = new User();
                     $user->username = isset($_POST['user_name']) ? $_POST['user_name'] : null;
@@ -67,12 +69,29 @@ class Controller
                 if (!isset($_SESSION['user'])) {
                     $this->viewService->render($this->defaultView);
                 } else {
+                    if (isset($_POST[self::SUBACTION_UPLOAD_PHOTO])) {
+                        $file = null;
+                        //get the file name from form input and move it to images folder
+                        if ($_FILES["pic"]["error"] > 0) {
+                            $errors[] = "Error in uploading file <br />";
+                        } else {
+                            $type = $_FILES["pic"]["type"];
+                            //if the type is one of the three image types
+                            if (($type == "image/jpeg") || ($type == "image/png") || ($type == "image/gif")) {
+                                //move the file to a sub-directory called images
+                                move_uploaded_file($_FILES["pic"]["tmp_name"], "images/" . $_FILES["pic"]["name"]);
+                                $file = "images/" . $_FILES["pic"]["name"];
+                            } else {
+                                $errors[] = "Wrong File Type! Only jpeg, png and gid allowed";
+                            }
+                        }
+                    }
                     if (isset($_POST[self::SUBACTION_ADD_ANIMAL])) {
                         $animal = new Animal();
                         $animal->name = isset($_POST['animal_name']) ? $_POST['animal_name'] : null;
                         $animal->birthdate = isset($_POST['animal_date']) ? $_POST['animal_date'] : null;
                         $animal->description = isset($_POST['animal_description']) ? $_POST['animal_description'] : null;
-                        $animal->picture = isset($_POST['animal_photo']) ? $_POST['animal_photo'] : null;
+                        $animal->picture = isset($_POST['pic']) ? $_POST['pic'] : null;
                         $operation = $this->databaseService->saveAnimal($animal);
                         header("Location: index.php?action=" . self::ACTION_HOME);
                     }
@@ -84,7 +103,8 @@ class Controller
         }
     }
 
-    private function login()
+    private
+    function login()
     {
         if (!$_POST[self::PARAMETER_USERNAME] || !$_POST[self::PARAMETER_PASSWORD]) {
             $this->viewService->render($this->defaultView);
@@ -103,7 +123,8 @@ class Controller
 
     }
 
-    private function home()
+    private
+    function home()
     {
         $user = $_SESSION['user'];
         $model = null;

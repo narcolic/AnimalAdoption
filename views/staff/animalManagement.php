@@ -1,8 +1,8 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: makis
- * Date: 28/3/2016
+ * User: narcolic
+ * Date: 25/3/2016
  * Time: 3:16 μμ
  */
 if (isset($_POST['submitted'])) {

@@ -51,18 +51,6 @@ class ViewService
 
             $this->displayPage($page);
         }
-//        if (!isset($_GET["page"])) {
-//            $this->page = "index.php";
-//        } else {
-//            if (!$_SESSION['credential']) {
-//                $this->page = "views/user/" . $_GET["page"] . ".php";
-//            }
-//            else{
-//                $this->page = "views/staff/" . $_GET["page"] . ".php";
-//            }
-//        }
-
-
         $this->displayPage(new Page("footer",null));
     }
 
