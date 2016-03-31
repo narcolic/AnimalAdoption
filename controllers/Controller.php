@@ -11,6 +11,7 @@ include_once 'services/loginService.php';
 class Controller
 {
     const PARAMETER_ACTION = 'action';
+    const PARAMETER_SUBACTION = 'subaction';
     const PARAMETER_USERNAME = 'username';
     const PARAMETER_PASSWORD = 'password';
 
@@ -23,6 +24,8 @@ class Controller
     const SUBACTION_ADD_ANIMAL = 'add_animal';
     const SUBACTION_UPLOAD_PHOTO = 'uploaded';
     const SUBACTION_REGISTER_USER = 'register_user';
+
+    const FILE_UPLOAD_DIR = 'images/';
 
     protected $loginService = null;
     protected $databaseService = null;
@@ -57,7 +60,6 @@ class Controller
                 $this->loginService->logout();
                 break;
             case self::ACTION_REGISTER;
-                var_dump($_POST[self::SUBACTION_REGISTER_USER]);
                 if (isset($_POST[self::SUBACTION_REGISTER_USER])) {
                     $user = new User();
                     $user->username = isset($_POST['user_name']) ? $_POST['user_name'] : null;
@@ -71,33 +73,16 @@ class Controller
                     $this->viewService->render($this->defaultView);
                 } else {
                     //upload image file
-                    var_dump($_POST[self::SUBACTION_UPLOAD_PHOTO]);
-                    if (isset($_POST[self::SUBACTION_UPLOAD_PHOTO])) {
-                        $file = null;
-                        //get the file name from form input and move it to images folder
-                        if ($_FILES["pic"]["error"] > 0) {
-                            $errors[] = "Error in uploading file <br />";
-                        } else {
-                            $type = $_FILES["pic"]["type"];
-                            //if the type is one of the three image types
-                            if (($type == "image/jpeg") || ($type == "image/png") || ($type == "image/gif")) {
-                                //move the file to a sub-directory called images
-                                move_uploaded_file($_FILES["pic"]["tmp_name"], "images/" . $_FILES["pic"]["name"]);
-                                $file = "images/" . $_FILES["pic"]["name"];
-                            } else {
-                                $errors[] = "Wrong File Type! Only jpeg, png and gid allowed";
-                            }
-                        }
-                    }
+                    var_dump($_POST);
                     //add a new animal to the database
-                    if (isset($_POST[self::SUBACTION_ADD_ANIMAL])) {
-                        $animal = new Animal();
-                        $animal->name = isset($_POST['animal_name']) ? $_POST['animal_name'] : null;
-                        $animal->birthdate = isset($_POST['animal_date']) ? $_POST['animal_date'] : null;
-                        $animal->description = isset($_POST['animal_description']) ? $_POST['animal_description'] : null;
-                        $animal->picture = isset($file) ? $file : null;
-                        $operation = $this->databaseService->saveAnimal($animal);
-                        header("Location: index.php?action=" . self::ACTION_HOME);
+                    if (isset($_POST[self::PARAMETER_SUBACTION])) {
+                        switch ($_POST[self::PARAMETER_SUBACTION]) {
+                            case self::SUBACTION_ADD_ANIMAL:
+                                $this->addAnimal();
+                                break;
+                            default:
+                                $this->home();
+                        }
                     }
                     $this->home();
                 }
@@ -152,5 +137,32 @@ class Controller
         $this->viewService->render(new Page($indexkey, $model));
     }
 
-
+    private function addAnimal()
+    {
+        $file = null;
+        $target_dir = self::FILE_UPLOAD_DIR;
+        $fileId = 'filename';
+        if ($_FILES[$fileId]["error"] > 0) {
+            $errors[] = "Error in uploading file <br />";
+        } else {
+            $type = $_FILES[$fileId]["type"];
+            //if the type is one of the three image types
+            if (($type == "image/jpeg") || ($type == "image/png") || ($type == "image/gif")) {
+                //move the file to a sub-directory called images
+                move_uploaded_file($_FILES[$fileId]["tmp_name"], $target_dir . $_FILES[$fileId]["name"]);
+                $file = $target_dir . $_FILES[$fileId]["name"];
+            } else {
+                unlink($_FILES[$fileId]["tmp_name"]);
+                $errors[] = "Wrong File Type! Only jpeg, png and gid allowed";
+            }
+        }
+        var_dump($_FILES);
+        $animal = new Animal();
+        $animal->name = isset($_POST['animal_name']) ? $_POST['animal_name'] : null;
+        $animal->birthdate = isset($_POST['animal_date']) ? $_POST['animal_date'] : null;
+        $animal->description = isset($_POST['animal_description']) ? $_POST['animal_description'] : null;
+        $animal->picture = isset($file) ? $file : null;
+        $operation = $this->databaseService->saveAnimal($animal);
+        //header("Location: index.php?action=" . self::ACTION_HOME);
+    }
 }

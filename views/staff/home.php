@@ -1,6 +1,6 @@
 <div class="jumbotron">
     <div class="container">
-        <form class="form" action="index.php?action=home" method="post">
+        <form class="form" action="index.php?action=home" method="post" enctype="multipart/form-data">
             <caption>
                 <h2 class="form title">Add new animal:</h2>
             </caption>
@@ -12,11 +12,11 @@
                 Description:
                 <input name="animal_description" type="text" class="form-control" placeholder="description">
                 Submit Your image (only jpeg, png,gif are allowed):
-                <input type="file" name="pic"/>
+                <input id="animalfile" type="file" name="filename"/>
                 <input type="hidden" name="uploaded" value="true"/><br>
-                <input class="btn btn-primary btn-xs" type="submit" name="upload" value="Upload"/>
+<!--                <input class="btn btn-primary btn-xs" type="submit" name="upload" value="Upload"/>-->
                 <input class="btn btn-primary btn-xs" type="reset" value="clear"/>
-                <input name="add_animal" type="hidden" value="1">
+                <input name="subaction" type="hidden" value="add_animal">
             </div>
             <br>
             <button class="btn btn-success" type="submit">Add Animal</button>
@@ -38,7 +38,7 @@
                     <td><?php echo $animal->name; ?></td>
                     <td><?php echo $animal->birthdate; ?></td>
                     <td><?php echo $animal->description; ?></td>
-                    <td><?php echo $animal->picture; ?></td>
+                    <td><img src="<?php echo $animal->picture; ?>" /></td>
                 </tr>
             <?php endforeach; ?>
         </table>
