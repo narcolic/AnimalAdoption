@@ -8,7 +8,6 @@ class ViewService
     const ViewsPath = 'views/';
     protected $defaultViews = array(
         'header' => 'header.php',
-        'menu' => 'menu.php',
         'footer' => 'footer.php',
         'intro' => 'home.php',
     );
