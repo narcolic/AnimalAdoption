@@ -67,6 +67,7 @@ class Controller
                     $this->loginService->register($user);
                     header("Location: index.php?action=" . self::ACTION_REGISTER);
                 }
+                $this->viewService->render(new Page('register', null));
                 break;
             case self::ACTION_HOME:
                 if (!isset($_SESSION['user'])) {
@@ -162,7 +163,7 @@ class Controller
         $animal->birthdate = isset($_POST['animal_date']) ? $_POST['animal_date'] : null;
         $animal->description = isset($_POST['animal_description']) ? $_POST['animal_description'] : null;
         $animal->picture = isset($file) ? $file : null;
-        $operation = $this->databaseService->saveAnimal($animal);
+        //$operation = $this->databaseService->saveAnimal($animal);
         //header("Location: index.php?action=" . self::ACTION_HOME);
     }
 }

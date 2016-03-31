@@ -10,6 +10,7 @@ class ViewService
         'header' => 'header.php',
         'footer' => 'footer.php',
         'intro' => 'home.php',
+        'register' => 'register.php',
     );
 
     protected $staffViews = array(
