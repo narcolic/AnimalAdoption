@@ -55,8 +55,14 @@ class LoginService
         header("Location: index.php");
     }
 
-    public function register()
+    public function register($user)
     {
-
+        if ($this->databaseService->isUserAvail($user->username)) {
+            $this->databaseService->saveUser($user);
+        }
+        else{
+            echo "Username already exists!";
+            
+        }
     }
 }

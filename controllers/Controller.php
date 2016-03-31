@@ -21,6 +21,7 @@ class Controller
 
 
     const SUBACTION_ADD_ANIMAL = 'add_animal';
+    const SUBACTION_REGISTER_USER = 'register_user';
 
     protected $loginService = null;
     protected $databaseService = null;
@@ -54,18 +55,23 @@ class Controller
                 $this->loginService->logout();
                 break;
             case self::ACTION_REGISTER;
-                $this->loginService->register();
+                if (isset($_POST[self::SUBACTION_REGISTER_USER])) {
+                    $user = new User();
+                    $user->username = isset($_POST['user_name']) ? $_POST['user_name'] : null;
+                    $user->password = isset($_POST['user_password']) ? $_POST['user_password'] : null;
+                    $this->loginService->register($user);
+                    header("Location: index.php?action=" . self::ACTION_REGISTER);
+                }
                 break;
             case self::ACTION_HOME:
                 if (!isset($_SESSION['user'])) {
                     $this->viewService->render($this->defaultView);
                 } else {
-                    if(isset($_POST[self::SUBACTION_ADD_ANIMAL]))
-                    {
+                    if (isset($_POST[self::SUBACTION_ADD_ANIMAL])) {
                         $animal = new Animal();
                         $animal->name = isset($_POST['animal_name']) ? $_POST['animal_name'] : null;
                         $animal->birthdate = isset($_POST['animal_date']) ? $_POST['animal_date'] : null;
-                        $animal->description  = isset($_POST['animal_description']) ? $_POST['animal_description'] : null;
+                        $animal->description = isset($_POST['animal_description']) ? $_POST['animal_description'] : null;
                         $animal->picture = isset($_POST['animal_photo']) ? $_POST['animal_photo'] : null;
                         $operation = $this->databaseService->saveAnimal($animal);
                         header("Location: index.php?action=" . self::ACTION_HOME);
@@ -117,7 +123,6 @@ class Controller
         }
         $this->viewService->render(new Page($indexkey, $model));
     }
-
 
 
 }

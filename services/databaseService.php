@@ -255,4 +255,32 @@ class DatabaseService
         }
         return $animals;
     }
+
+    public function saveUser($user)
+    {
+        $query = "INSERT INTO user(username,
+            password) VALUES (
+            :name, 
+            :password 
+            )";
+
+        $stmt = $this->pdo->prepare($query);
+
+        $stmt->bindParam(':name', $user->username, PDO::PARAM_STR);
+        $stmt->bindParam(':password', $user->password, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function isUserAvail($username){
+        $query = "SELECT username FROM user WHERE username = '" . $username . "'";
+        try {
+            $row = $this->pdo->query($query);
+            if ($row->rowCount() !=0) {
+                return false;
+            }
+            return true;
+        } catch (PDOException $ex) {
+            array_push($this->errors, $ex->getMessage());
+        }
+    }
 }
