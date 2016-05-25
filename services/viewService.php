@@ -1,6 +1,6 @@
 <?php
 
-include_once '/views/page.php';
+include_once 'views/page.php';
 
 class ViewService
 {
@@ -8,9 +8,9 @@ class ViewService
     const ViewsPath = 'views/';
     protected $defaultViews = array(
         'header' => 'header.php',
-        'menu' => 'menu.php',
         'footer' => 'footer.php',
         'intro' => 'home.php',
+        'register' => 'register.php',
     );
 
     protected $staffViews = array(
@@ -22,6 +22,7 @@ class ViewService
     );
 
     public $page = null;
+    public $headerModel = null;
     public $view = null;
 
 
@@ -32,6 +33,15 @@ class ViewService
     function render($page)
     {
         $this->page = $page;
+        if(isset($_SESSION['user']))
+        {
+            $this->headerModel =array();
+            $this->headerModel['user'] = $_SESSION['user'];
+
+        }
+        else{
+            $this->headerModel = null;
+        }
         $this->displayPage(new Page("header",null));
         if (!isset($page->view)) {
             $this->displayPage(new Page("intro",null));
@@ -41,18 +51,6 @@ class ViewService
 
             $this->displayPage($page);
         }
-//        if (!isset($_GET["page"])) {
-//            $this->page = "index.php";
-//        } else {
-//            if (!$_SESSION['credential']) {
-//                $this->page = "views/user/" . $_GET["page"] . ".php";
-//            }
-//            else{
-//                $this->page = "views/staff/" . $_GET["page"] . ".php";
-//            }
-//        }
-
-
         $this->displayPage(new Page("footer",null));
     }
 
